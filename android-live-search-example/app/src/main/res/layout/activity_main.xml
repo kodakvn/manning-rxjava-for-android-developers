@@ -19,11 +19,29 @@
         android:paddingRight="10dp"
         android:background="#fff"/>
 
+    <Switch
+        android:layout_width="wrap_content"
+        android:layout_height="10dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginLeft="10dp"
+        android:id="@+id/switch_button"
+        />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:layout_marginTop="80dp"
+        android:textColor="#f00"
+        android:id="@+id/warning_text"/>
+
     <ListView
         android:id="@+id/search_results"
         android:layout_width="match_parent"
         android:layout_height="196dp"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="120dp"
         android:background="#fff"/>
+
 
 </FrameLayout>
