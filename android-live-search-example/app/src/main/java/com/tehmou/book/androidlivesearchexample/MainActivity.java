@@ -13,6 +13,8 @@ import java.util.List;
 import java.util.Observable;
 import java.util.concurrent.TimeUnit;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
+
 public class MainActivity extends AppCompatActivity {
     ArrayAdapter<String> arrayAdapter;
 
@@ -28,7 +30,9 @@ public class MainActivity extends AppCompatActivity {
         EditText editText = (EditText) findViewById(R.id.edit_text);
 
         RxTextView.textChanges(editText)
-            .delay(50, TimeUnit.MILLISECONDS)
+            .filter(text -> text.length() >= 3)
+            .debounce(150, TimeUnit.MILLISECONDS)
+            .observeOn(AndroidSchedulers.mainThread())
             .subscribe(this::updateSearchResults);
     }
 
