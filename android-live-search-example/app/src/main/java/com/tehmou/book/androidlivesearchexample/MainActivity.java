@@ -6,8 +6,11 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 
+import com.jakewharton.rxbinding2.widget.RxTextView;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
 
 public class MainActivity extends AppCompatActivity {
     ArrayAdapter<String> arrayAdapter;
@@ -22,6 +25,10 @@ public class MainActivity extends AppCompatActivity {
         listView.setAdapter(arrayAdapter);
 
         EditText editText = (EditText) findViewById(R.id.edit_text);
+
+        RxTextView.textChanges(editText)
+            .filter(text -> text.length() >= 3)
+            .subscribe(this::updateSearchResults);
     }
 
     private void clearSearchResults() {
