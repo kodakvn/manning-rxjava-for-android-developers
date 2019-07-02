@@ -11,6 +11,7 @@ import com.jakewharton.rxbinding2.widget.RxTextView;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
+import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
     ArrayAdapter<String> arrayAdapter;
@@ -27,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
         EditText editText = (EditText) findViewById(R.id.edit_text);
 
         RxTextView.textChanges(editText)
-            .filter(text -> text.length() >= 3)
+            .delay(50, TimeUnit.MILLISECONDS)
             .subscribe(this::updateSearchResults);
     }
 
