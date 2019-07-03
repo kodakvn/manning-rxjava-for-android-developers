@@ -1,8 +1,8 @@
-package com.tehmou.book.androidnewsreaderexample;
+package com.tehmou.book.androidnewsreaderexample.network;
 
 import java.util.Date;
 
-public class Entry {
+public class Entry implements Comparable<Entry> {
    public final String id;
    public final String title;
    public final String link;
@@ -17,5 +17,14 @@ public class Entry {
 
    @Override public String toString() {
       return new Date(updated).toString() + "\n"+ title;
+   }
+
+   @Override public int compareTo(Entry o) {
+      if (this.updated > o.updated) {
+         return -1;
+      } else if (this.updated < o.updated) {
+         return 1;
+      }
+      return 0;
    }
 }

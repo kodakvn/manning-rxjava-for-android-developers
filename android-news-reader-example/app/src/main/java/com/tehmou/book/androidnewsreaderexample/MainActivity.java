@@ -5,7 +5,12 @@ import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.tehmou.book.androidnewsreaderexample.network.Entry;
+import com.tehmou.book.androidnewsreaderexample.network.FeedObservable;
+
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import io.reactivex.*;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -18,24 +23,53 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Observable<List<Entry>> purpleFeedObservable = FeedObservable.getFeed("https://news.google.com/?output=atom");
-        Observable<List<Entry>> yellowFeedObservable = FeedObservable.getFeed("http://www.theregister.co.uk/software/headlines.atom");
-        Observable<List<Entry>> combinedObservable = Observable.combineLatest(purpleFeedObservable, yellowFeedObservable,
-           (purpleList, yellowList) -> {
-            final List<Entry> list = new ArrayList<>();
-            list.addAll(purpleList);
-            list.addAll(yellowList);
-            return list;
+        List<String> feedUrls = Arrays.asList(
+           "https://news.google.com/?output=atom",
+           "http://www.theregister.co.uk/software/headlines.atom",
+           "http://www.linux.com/news/software?format=feed&type=atom"
+        );
+
+        List<Observable<List<Entry>>> observableList = new ArrayList<>();
+
+        for (String feedUrl: feedUrls) {
+            final Observable<List<Entry>> feedObservable = FeedObservable.getFeed(feedUrl)
+               .onErrorReturn(e -> new ArrayList<Entry>());
+            observableList.add(feedObservable);
+        }
+
+        Observable<List<Entry>> combinedObservable = Observable.combineLatest(observableList, (listOfLists) -> {
+            final List<Entry> combinedList = new ArrayList<>();
+            for (Object list : listOfLists) {
+                combinedList.addAll((List<Entry>)list);
+            }
+            return combinedList;
         });
 
         combinedObservable
+           .map(list -> {
+               List<Entry> sortedList = new ArrayList<>();
+               sortedList.addAll(list);
+               Collections.sort(sortedList);
+               return sortedList;
+           })
+           .flatMap(Observable::<Entry>fromIterable)
+           .take(6)
+           .map(Entry::toString)
+           .toList()
            .observeOn(AndroidSchedulers.mainThread())
            .subscribe(this::drawList);
     }
 
-    private void drawList(List<Entry> listItems) {
+    private void drawList(List<String> listItems) {
         final ListView listView = (ListView) findViewById(R.id.list);
-        final ArrayAdapter<Entry> itemsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, listItems);
+        final ArrayAdapter<String> itemsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, listItems);
         listView.setAdapter(itemsAdapter);
+    }
+
+    private List<Entry> sortList(List<Entry> list) {
+        List<Entry> sortedList = new ArrayList<>();
+        sortedList.addAll(list);
+        Collections.sort(sortedList);
+        return sortedList;
     }
 }
