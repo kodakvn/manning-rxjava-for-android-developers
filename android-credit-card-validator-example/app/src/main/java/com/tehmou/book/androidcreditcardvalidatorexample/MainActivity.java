@@ -27,5 +27,9 @@ public class MainActivity extends AppCompatActivity {
         Observable<Boolean> isExpirationDateValid = expirationDateObservable.map(ValidationUtils::checkExpirationDate);
         Observable<CardType> cardTypeObservable = creditCardNumberObservable.map(CardType::fromString);
         Observable<Boolean> isCardTypeValid = cardTypeObservable.map(cardType -> cardType != CardType.UNKNOWN);
+        Observable<Boolean> isCheckSumValid = creditCardNumberObservable
+           .map(ValidationUtils::convertFromStringToIntArray)
+           .map(ValidationUtils::checkCardChecksum);
+        Observable<Boolean> isCreditCardNumberValid = ValidationUtils.and(isCardTypeValid, isCheckSumValid);
     }
 }
