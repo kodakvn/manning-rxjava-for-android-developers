@@ -14,6 +14,10 @@ public class ValidationUtils {
       return Observable.combineLatest(a, b, (valueA, valueB) -> valueA && valueB);
    }
 
+   public static Observable<Boolean> and(Observable<Boolean> a, Observable<Boolean> b, Observable<Boolean> c) {
+      return Observable.combineLatest(a, b, c, (valueA, valueB, valueC) -> valueA && valueB && valueC);
+   }
+
    public static Observable<Boolean> equals(Observable<Integer> a, Observable<Integer> b) {
       return Observable.combineLatest(a, b, (valueA, valueB) -> valueA.equals(valueB));
    }
