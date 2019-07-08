@@ -25,5 +25,7 @@ public class MainActivity extends AppCompatActivity {
         Observable<String> expirationDateObservable = RxTextView.textChanges(creditCardExpirationDate).map(CharSequence::toString);
 
         Observable<Boolean> isExpirationDateValid = expirationDateObservable.map(ValidationUtils::checkExpirationDate);
+        Observable<CardType> cardTypeObservable = creditCardNumberObservable.map(CardType::fromString);
+        Observable<Boolean> isCardTypeValid = cardTypeObservable.map(cardType -> cardType != CardType.UNKNOWN);
     }
 }
