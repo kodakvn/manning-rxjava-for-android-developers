@@ -14,6 +14,14 @@ public class ValidationUtils {
       return Observable.combineLatest(a, b, (valueA, valueB) -> valueA && valueB);
    }
 
+   public static Observable<Boolean> equals(Observable<Integer> a, Observable<Integer> b) {
+      return Observable.combineLatest(a, b, (valueA, valueB) -> valueA.equals(valueB));
+   }
+
+//   public static Observable<Boolean> equals(Observable<Object> a, Observable<Object> b) {
+//      return Observable.combineLatest(a, b, (valueA, valueB) -> valueA.equals(valueB));
+//   }
+
    public static boolean checkCardChecksum(int[] digits) {
       int sum = 0;
       int length = digits.length;
@@ -44,4 +52,6 @@ public class ValidationUtils {
 
       return numbers;
    }
+
+
 }

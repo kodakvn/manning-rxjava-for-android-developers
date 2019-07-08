@@ -25,11 +25,16 @@ public class MainActivity extends AppCompatActivity {
         Observable<String> expirationDateObservable = RxTextView.textChanges(creditCardExpirationDate).map(CharSequence::toString);
 
         Observable<Boolean> isExpirationDateValid = expirationDateObservable.map(ValidationUtils::checkExpirationDate);
+
         Observable<CardType> cardTypeObservable = creditCardNumberObservable.map(CardType::fromString);
         Observable<Boolean> isCardTypeValid = cardTypeObservable.map(cardType -> cardType != CardType.UNKNOWN);
         Observable<Boolean> isCheckSumValid = creditCardNumberObservable
            .map(ValidationUtils::convertFromStringToIntArray)
            .map(ValidationUtils::checkCardChecksum);
         Observable<Boolean> isCreditCardNumberValid = ValidationUtils.and(isCardTypeValid, isCheckSumValid);
+
+        Observable<Integer> requiredCvcLength = cardTypeObservable.map(CardType::getCvcLength);
+        Observable<Integer> cvcInputLength = cvcCodeObservable.map(String::length);
+        Observable<Boolean> isCvcCodeValid = ValidationUtils.equals(requiredCvcLength, cvcInputLength);
     }
 }
