@@ -6,6 +6,6 @@ import retrofit2.http.GET;
 import retrofit2.http.Url;
 
 public interface AtomApi {
-   @GET
-   Call<ResponseBody> getFeed(@Url String url);
+    @GET
+    Call<ResponseBody> getFeed(@Url String url);
 }
