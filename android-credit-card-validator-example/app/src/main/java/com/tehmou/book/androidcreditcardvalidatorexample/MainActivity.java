@@ -2,6 +2,7 @@ package com.tehmou.book.androidcreditcardvalidatorexample;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -12,6 +13,7 @@ import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 
 public class MainActivity extends AppCompatActivity {
+    private static final String TAG = "kkk";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +48,10 @@ public class MainActivity extends AppCompatActivity {
         Observable<Boolean> isCvcCodeValid = ValidationUtils.equals(requiredCvcLength, cvcInputLength);
 
         // put them all
-        Observable<Boolean> isFormValidObservable = ValidationUtils.and(isCreditCardNumberValid, isCheckSumValid, isCvcCodeValid);
+        Observable<Boolean> isFormValidObservable = ValidationUtils.and(
+           isCreditCardNumberValid.doOnNext(value -> Log.d(TAG, "isCreditCardNumberValid: " + value)),
+           isCheckSumValid,
+           isCvcCodeValid);
         isFormValidObservable
            .observeOn(AndroidSchedulers.mainThread())
            .subscribe(submitFormButton::setEnabled);
