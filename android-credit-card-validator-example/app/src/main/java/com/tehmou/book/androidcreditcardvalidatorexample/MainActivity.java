@@ -9,6 +9,8 @@ import android.widget.TextView;
 
 import com.jakewharton.rxbinding2.widget.RxTextView;
 
+import java.util.regex.Pattern;
+
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 
@@ -32,7 +34,8 @@ public class MainActivity extends AppCompatActivity {
         Observable<String> expirationDateObservable = RxTextView.textChanges(creditCardExpirationDate).map(CharSequence::toString);
 
         // expiration date
-        Observable<Boolean> isExpirationDateValid = expirationDateObservable.map(ValidationUtils::checkExpirationDate);
+        Pattern expirationDatePattern = Pattern.compile("^\\d\\d/\\d\\d$");
+        final Observable<Boolean> isExpirationDateValid = expirationDateObservable.map(text -> expirationDatePattern.matcher(text).find());
 
         // card number
         Observable<CardType> cardTypeObservable = creditCardNumberObservable.map(CardType::fromString);
