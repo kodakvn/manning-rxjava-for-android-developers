@@ -1,7 +1,6 @@
 package com.tehmou.book.androidflickrclientexample;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,54 +9,60 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+import com.tehmou.book.androidflickrclientexample.pojo.Photo;
+
 import java.util.List;
 
-public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.PhotoViewHolder> {
+public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.PhotoViewHolder>{
 
-   private Context context;
-   private List<SimplePhoto> photos;
+    final private Context context;
+    final private List<Photo> photos;
 
-   public PhotoAdapter(Context context, List<SimplePhoto> photos) {
-      this.context = context;
-      this.photos = photos;
-   }
+    public PhotoAdapter(Context context, List<Photo> photos) {
+        this.context = context;
+        this.photos = photos;
+    }
 
-   @Override
-   public int getItemCount() {
-      return photos.size();
-   }
+    @Override
+    public int getItemCount() {
+        return photos.size();
+    }
 
-   @NonNull @Override
-   public PhotoViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-      View view = LayoutInflater.from(context).inflate(R.layout.photo_list_card_view, viewGroup, false);
-      return new PhotoViewHolder(view);
-   }
+    @Override
+    public PhotoViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.photo_list_card_view, viewGroup, false);
+        PhotoViewHolder viewHolder = new PhotoViewHolder(view);
+        return viewHolder;
+    }
 
-   @Override
-   public void onBindViewHolder(@NonNull PhotoViewHolder holder, int position) {
-      final SimplePhoto photo = photos.get(position);
-      holder.personName.setText(photo.getTitle());
-      holder.personAge.setText(photo.getOwner());
-   }
+    @Override
+    public void onBindViewHolder(PhotoViewHolder photoViewHolder, int i) {
+        final Photo photo = photos.get(i);
+        photoViewHolder.personName.setText(photo.getTitle());
+        photoViewHolder.personAge.setText(photo.getUsername());
+        Picasso.with(context).load(photo.getThumbnailUrl())
+                .into(photoViewHolder.personPhoto);
+        //photoViewHolder.personPhoto.setImageResource(photos.get(i).photoId);
+    }
 
-   @Override public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
-      super.onAttachedToRecyclerView(recyclerView);
-   }
+    @Override
+    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
+        super.onAttachedToRecyclerView(recyclerView);
+    }
 
-   static class PhotoViewHolder extends RecyclerView.ViewHolder {
+    public static class PhotoViewHolder extends RecyclerView.ViewHolder {
+        CardView cv;
+        TextView personName;
+        TextView personAge;
+        ImageView personPhoto;
 
-      CardView cv;
-      TextView personName;
-      TextView personAge;
-      ImageView personPhoto;
-
-      public PhotoViewHolder(@NonNull View itemView) {
-         super(itemView);
-         cv = (CardView) itemView.findViewById(R.id.cv);
-         personName = (TextView) itemView.findViewById(R.id.person_name);
-         personAge = (TextView) itemView.findViewById(R.id.person_age);
-         personPhoto = (ImageView) itemView.findViewById(R.id.person_photo);
-      }
-   }
-
+        PhotoViewHolder(View itemView) {
+            super(itemView);
+            cv = (CardView) itemView.findViewById(R.id.cv);
+            personName = (TextView) itemView.findViewById(R.id.person_name);
+            personAge = (TextView) itemView.findViewById(R.id.person_age);
+            personPhoto = (ImageView) itemView.findViewById(R.id.person_photo);
+        }
+    }
 }
