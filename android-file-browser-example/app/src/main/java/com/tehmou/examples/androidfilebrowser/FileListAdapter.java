@@ -1,6 +1,7 @@
 package com.tehmou.examples.androidfilebrowser;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -10,28 +11,19 @@ import java.io.File;
 import java.util.List;
 
 public class FileListAdapter extends ArrayAdapter<File> {
-    public FileListAdapter(Context context, int resource) {
-        super(context, resource);
+    private final Context context;
+    private List<File> files;
+
+    public FileListAdapter(Context context, List<File> objects) {
+        super(context, android.R.layout.simple_list_item_1, objects);
+        this.context = context;
+        this.files = objects;
     }
 
-    public FileListAdapter(Context context, int resource, int textViewResourceId) {
-        super(context, resource, textViewResourceId);
-    }
-
-    public FileListAdapter(Context context, int resource, File[] objects) {
-        super(context, resource, objects);
-    }
-
-    public FileListAdapter(Context context, int resource, int textViewResourceId, File[] objects) {
-        super(context, resource, textViewResourceId, objects);
-    }
-
-    public FileListAdapter(Context context, int resource, List<File> objects) {
-        super(context, resource, objects);
-    }
-
-    public FileListAdapter(Context context, int resource, int textViewResourceId, List<File> objects) {
-        super(context, resource, textViewResourceId, objects);
+    public void refreshFileList(List<File> newFiles) {
+        files.clear();
+        files.addAll(newFiles);
+        notifyDataSetChanged();
     }
 
     @Override
